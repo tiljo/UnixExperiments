@@ -20,6 +20,14 @@ int main()
 						dup(fd);
 						execlp(r,r,(char*)NULL);
 					}
+					else if(w[0]=='<'){
+						fd = open(x,O_RDONLY);
+						close(0);
+						dup(fd);
+						execlp(r,r,(char*) NULL);
+					}
+
+
 					/*pipe*/
 					else if(w[0]=='|'){
 						pipe(fdp);
@@ -28,7 +36,6 @@ int main()
 							dup(fdp[0]);
 							close(fdp[1]);
 							execlp(x,x,(char*)NULL);
-							wait();
 						}
 						else{
 							close(1);
