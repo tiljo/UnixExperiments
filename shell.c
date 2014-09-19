@@ -2,17 +2,21 @@
 int main()
 {   
 	
-	int h=0,i=0,j=0,k=0,fd,fdp[2];
-	char s[10],r[10],w[10],x[10];
-	for(k=0;k<10;k++){
-		x[k]=s[k]=r[k]=w[k]=0;
-	}
+	int i=0,fd,fdp[2];
+	char s[50],r[50],w[50],x[50];
 	printf("NOTE: this shell expecting upto 3 arguments\n");
 	while(1){
+
+			for(i=0;i<50;i++){
+				x[i]=s[i]=r[i]=w[i]=0;
+			}
+
 			if(fork()==0){
-				printf("myunix$:");
+					printf("myunix$:");
 					gets(s);
 					sscanf(s,"%s %s	%s",r,w,x);
+
+
 					/*redirection*/
 					if(w[0]=='>'){
 						fd = open(x,O_WRONLY | O_CREAT | O_TRUNC,0644);
@@ -44,6 +48,7 @@ int main()
 							execlp(r,r,(char*)NULL);
 						}
 					}
+
 					/*basic arguments upto 3*/
 					else if(w[0]==0 && x[0]==0 )
 						execlp(s,r,(char*)NULL);
