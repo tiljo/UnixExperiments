@@ -27,10 +27,11 @@ int main(int argc,char *argv[])
 	while((q = readdir(p))!=0){
 		if((strcmp(q->d_name,".")==0) || strcmp(q->d_name,"..")==0)
 			;
-		else
+		else{
 			w[h++]=q->d_name;
 			//printf("\n-------%d-%s\n",h-1,w[h-1]);
 			printf("%s  ",q->d_name);
+		}
 	}
 //	printf("\n\n%s------%s\n",w[0],w[1]);
 	i=0;
