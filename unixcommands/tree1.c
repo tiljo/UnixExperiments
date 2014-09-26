@@ -1,5 +1,4 @@
 
-
 #include"myhdr.c"
 #define SIZE 10000
 
@@ -21,10 +20,12 @@ int check(char *w){
 	else return 1;
 }
 /*ls -r function*/
-void lsr(char *w,int *count)
+void lsr(char *w,int *count,int *tabn)
 {
-	if((*count)==1)
+	if((*count)==1){
 		*count = 0;
+		*tabn=-1;
+	}
 	else{
 	/*leave . and ..*/
 		if(check(w)==0)
@@ -32,6 +33,9 @@ void lsr(char *w,int *count)
 	}
 /*some initialization*/
 	char end[]="/..";
+	char tab[10];
+	int i=0;
+	int t=0;
 	DIR *p;
 	char *re[SIZE];
 	int k=0,path;
@@ -39,7 +43,7 @@ void lsr(char *w,int *count)
 		re[k++]=NULL;
 	k=0;
 	struct dirent *q;
-	int i=0;
+	//int i=0;
 	char *r=NULL;
 	char *s=NULL;
 	char buf[SIZE];
@@ -54,44 +58,35 @@ void lsr(char *w,int *count)
 		strcat(buf,s);
 		r=buf;//creating pwd
 		chdir(r);//change dir to  given dir..
+		(*tabn)++;
 	}
 	/*for a valid path print 'ls'*/
 	if(r!=NULL){
-		/*printing path*/
-			printf("PATH->%s",r);
+		path = (*tabn)*2;
+		for(t=0;t<(path);t++){
+			tab[t]='|';
+			tab[t+1]='\t';
+			t++;
+		}
+		tab[t]='\0';
+		 t=0;
 
-/*		printf(".");
-		for(path=54;r[path]!=0;path++)
-			printf("%c",r[path]);*/
-		printf(":\n");
-
-
+		/**/
 		p = opendir(r);
 		while((q = readdir(p))!=0){
 			if(check(q->d_name)==0);
 			else{
-				printf("%s ",q->d_name);
-				path =1;
+				if(q->d_name == NULL)return;
+				printf("%s|--%s\n",tab,q->d_name);
+				lsr(q->d_name,count,tabn);
 			}
 		}
 		closedir(p);
-		if(path!=1) printf("\n");
-		else printf("\n\n");
-
-
-	p = opendir(r);
-		while((q = readdir(p))!=0){
-			if(check(q->d_name)==0);
-			else{
-				lsr(q->d_name,count);
-			}
-		}
-		closedir(p);
-
-	//	printf("\n");
 		k=0;
 		strcat(r,end);//creating backward path
+		(*tabn)--;
 		chdir(r);//moving backward 
+	
 	}
 }
 
@@ -100,17 +95,11 @@ void lsr(char *w,int *count)
 /*execute 'ls -R' command using function lsr*/
 int main(int argc,char *argv[])
 {	
-	int count =1;
-	
-	if(argc<2||(argc>2)){
-	   	printf("usage error: expecting '-R' as only one argument\n");
+	int count =1;int tabn =0;
+	if(argc>1){
+		printf("usage error:no arguments expected with tree\n");
 		exit(1);
 	}
-	assert(argc==2);
-	if(strcmp(argv[1],"-R")!=0){
-		printf("usage:expecting -R instead of '%s'\n",argv[1]);
-		exit(1);
-	}
-	lsr(".",&count);
+	lsr(".",&count,&tabn);
 	return 0;
 }
