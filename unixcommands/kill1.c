@@ -1,10 +1,12 @@
 #include"myhdr.c"
 int main(int argc, char *argv[])
 {
-	int i=0;
-	assert(argc<4);
-	atoi(argv[1]);
-	kill(atoi(argv[1]),atoi(argv[2]));
-	perror("kill:");
+	int pid=0;
+	if(argc>2)
+		printf("usage:accept pid only");
+	assert(argc<3);
+	pid =atoi(argv[1]);
+	if(kill(pid,SIGKILL)==-1)
+		perror("kill:");
 	return 0;
 }
